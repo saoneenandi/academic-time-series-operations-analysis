@@ -103,24 +103,7 @@ represent continuous academic time measured in days over an academic term.
 
 The instantaneous workload stress is modeled as:
 
-$$
-S(t)
-=
-S_0
-+
-\sum_{i\in\mathrm{Exams}}
-w_i
-\exp\left(
--\frac{(t-t_i)^2}{2\sigma^2}
-\right)
-+
-\sum_{j\in\mathrm{Quizzes}}
-w_j
-\exp\left(
-\frac{t-t_j}{\lambda}
-\right),
-\qquad t\leq t_j.
-$$
+**S(t) = S₀ + Σᵢ wᵢ exp(−(t − tᵢ)² / (2σ²)) + Σⱼ wⱼ exp((t − tⱼ) / λ),  t ≤ tⱼ**
 
 ### Parameters
 
