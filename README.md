@@ -676,8 +676,7 @@ could then be investigated using Monte Carlo simulation or Bayesian methods.
 A stochastic extension could take the form:
 
 $$
-dF
-=
+dF =
 \left[
 \alpha S(t)
 -
@@ -687,7 +686,16 @@ dF
 \sigma_F dW_t
 $$
 
-where \(W_t\) represents a Wiener process.
+where:
+
+- **W_t** represents a Wiener process.
+- **σ_F** represents the magnitude of stochastic fluctuations in the modeled fatigue state.
+- **α** represents the workload-to-fatigue accumulation coefficient.
+- **β** represents the fatigue dissipation coefficient.
+- **S(t)** represents the continuous academic stress signal.
+- **H(t)** represents the rest-capacity function.
+
+The stochastic term **σ_F dW_t** introduces random fluctuations into the deterministic fatigue dynamics, allowing the model to represent uncertainty or unobserved variation in the system.
 
 ---
 
