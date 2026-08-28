@@ -141,41 +141,43 @@ This transformation is important because it converts a **discrete event schedule
 
 ---
 
-# 2. Fatigue Dynamical Model
+## 2. Fatigue Dynamical Model
 
-Let \(F(t)\) represent the modeled cumulative academic fatigue/strain state.
+Let **F(t)** represent the modeled cumulative academic fatigue or strain state.
 
-Its evolution is governed by:
+Its evolution is governed by the following differential equation:
 
 $$
-\boxed{
-\frac{dF(t)}{dt}
-=
-\alpha S(t)
--
-\beta F(t)\left(1-H(t)\right)
-}
+\frac{dF(t)}{dt} = \alpha S(t) - \beta F(t)(1-H(t))
 $$
 
 where:
 
 | Parameter | Meaning | Range |
 |---|---|---|
-| \(\alpha\) | Workload-to-fatigue accumulation coefficient | \(0.05 \leq \alpha \leq 0.50\) |
-| \(\beta\) | Fatigue dissipation / recovery coefficient | \(0.01 \leq \beta \leq 0.20\) |
-| \(H(t)\) | Institutional rest-capacity mask | \(0 \leq H(t) \leq 1\) |
+| **α** | Workload-to-fatigue accumulation coefficient | 0.05 ≤ α ≤ 0.50 |
+| **β** | Fatigue dissipation / recovery coefficient | 0.01 ≤ β ≤ 0.20 |
+| **H(t)** | Institutional rest-capacity function | 0 ≤ H(t) ≤ 1 |
 
-The equation contains two competing mechanisms:
+The model contains two competing mechanisms:
 
 $$
-\underbrace{\alpha S(t)}_{\text{workload-driven accumulation}}
-\qquad-\qquad
-\underbrace{\beta F(t)(1-H(t))}_{\text{dissipation / recovery}}
+\alpha S(t)
 $$
 
-The first term increases the modeled state in response to academic workload.
+**Workload-driven accumulation**
 
-The second term represents modeled dissipation.
+and
+
+$$
+\beta F(t)(1-H(t))
+$$
+
+**Fatigue dissipation / recovery**
+
+The first term increases the modeled fatigue state in response to academic workload.
+
+The second term represents modeled fatigue dissipation, with the rest-capacity function **H(t)** modifying the effective recovery available to the system.
 
 ---
 
