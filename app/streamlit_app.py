@@ -5,43 +5,82 @@ import plotly.graph_objects as go
 import plotly.express as px
 from scipy.integrate import solve_ivp
 
-# --- Page Configuration ---
+# --- Page & Layout Configuration ---
 st.set_page_config(
-    page_title="BIT Mesra Integrated M.Sc. Math & Computing - Stress Analytics",
-    page_icon="🎓",
+    page_title="Academic Workload & Stress Engine",
+    page_icon="⚡",
     layout="wide"
 )
 
-# Custom CSS Styling
+# --- Aesthetic Custom CSS Styling ---
 st.markdown("""
 <style>
+    /* Main Background & Font Styling */
+    .stApp {
+        background-color: #0F172A;
+        color: #F8FAFC;
+    }
+    
+    /* Title and Subtitle */
     .main-header {
-        color: #800000;
-        font-weight: 700;
-        font-size: 2.2rem;
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(90deg, #38BDF8 0%, #818CF8 50%, #C084FC 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+        font-size: 2.5rem;
+        margin-bottom: 0.2rem;
     }
     .sub-header {
-        color: #4A4A4A;
-        font-size: 1.1rem;
-        margin-bottom: 1.5rem;
+        color: #94A3B8;
+        font-size: 1.05rem;
+        margin-bottom: 1.8rem;
+    }
+
+    /* Metric Cards Styling */
+    div[data-testid="stMetric"] {
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 16px 20px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
     }
     div[data-testid="stMetricValue"] {
         font-size: 1.8rem;
         font-weight: 700;
+        color: #F8FAFC;
+    }
+    div[data-testid="stMetricLabel"] {
+        color: #38BDF8;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    /* Tabs Styling */
+    button[data-baseweb="tab"] {
+        color: #94A3B8 !important;
+        font-weight: 600 !important;
+        border-radius: 8px !important;
+        padding: 8px 16px !important;
+    }
+    button[aria-selected="true"] {
+        color: #38BDF8 !important;
+        background-color: rgba(56, 189, 248, 0.1) !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
 
-# --- Differential Equation Simulation Engine ---
-class BITMesraSimulationEngine:
+# --- Numerical Differential Engine ---
+class StressSimulationEngine:
     def __init__(self, semester_days=110, alpha=0.22, beta=0.08):
         self.T = semester_days
-        self.alpha = alpha  # Stress impact coefficient
-        self.beta = beta    # Recovery rate coefficient
+        self.alpha = alpha  # Sensitivity rate
+        self.beta = beta    # Recovery rate
 
     def stress_heuristic(self, t, assessments):
-        S_0 = 0.5  # Baseline academic stress
+        S_0 = 0.5  # Baseline
         stress = S_0
         
         for item in assessments:
@@ -49,11 +88,9 @@ class BITMesraSimulationEngine:
             w_i = item['weight']
             eval_type = item['type']
             
-            # Exams (Mid-Sem / End-Sem): Gaussian kernel modeling prep & exam period
             if eval_type in ["Exam", "Theory"]:
                 sigma = 2.5
                 stress += w_i * np.exp(-0.5 * ((t - t_i) / sigma) ** 2)
-            # Quizzes / Assignments / Sessional Vivas: Asymmetric decay kernel
             else:
                 lambda_p = 3.0
                 tau = t - t_i
@@ -81,8 +118,8 @@ class BITMesraSimulationEngine:
         return pd.DataFrame({'time_day': sol.t, 'stress_index': stress_vals, 'fatigue_level': sol.y[0]})
 
 
-# --- BIT Mesra Integrated M.Sc. Curriculum Database ---
-def get_bit_mesra_curriculum():
+# --- Curriculum Dataset ---
+def get_curriculum():
     return {
         "Semester 1": [
             {"code": "MA101", "name": "Calculus-I", "credits": 4.0, "type": "Theory"},
@@ -98,58 +135,34 @@ def get_bit_mesra_curriculum():
             {"code": "MA110R1", "name": "Complex Analysis", "credits": 3.0, "type": "Theory"},
             {"code": "PH109", "name": "Physics I", "credits": 4.0, "type": "Theory"},
             {"code": "CS101", "name": "Programming for Problem Solving", "credits": 4.0, "type": "Theory"},
-            {"code": "PH110R1", "name": "Physics I Lab", "credits": 2.0, "type": "Lab"},
-            {"code": "CS102", "name": "Programming for Problem Solving Lab", "credits": 1.5, "type": "Lab"}
+            {"code": "PH110R1", "name": "Physics I Lab", "credits": 2.0, "type": "Lab"}
         ],
         "Semester 3": [
             {"code": "MA202R1", "name": "Abstract Algebra", "credits": 3.0, "type": "Theory"},
             {"code": "MA201R1", "name": "Partial Differential Equations", "credits": 3.0, "type": "Theory"},
             {"code": "PH111", "name": "Physics II", "credits": 4.0, "type": "Theory"},
             {"code": "CS231", "name": "Data Structures", "credits": 4.0, "type": "Theory"},
-            {"code": "PE309", "name": "Project Management", "credits": 3.0, "type": "Theory"},
-            {"code": "PH112", "name": "Physics II Lab", "credits": 2.0, "type": "Lab"},
-            {"code": "CS232", "name": "Data Structures Lab", "credits": 1.5, "type": "Lab"}
+            {"code": "PE309", "name": "Project Management", "credits": 3.0, "type": "Theory"}
         ],
         "Semester 4": [
             {"code": "MA206R1", "name": "Linear Algebra", "credits": 3.0, "type": "Theory"},
             {"code": "MA210", "name": "DMS and Graph Theory", "credits": 4.0, "type": "Theory"},
             {"code": "CS233", "name": "OOP and Design Pattern", "credits": 3.0, "type": "Theory"},
-            {"code": "CH213", "name": "Chemistry II", "credits": 4.0, "type": "Theory"},
-            {"code": "CS234", "name": "OOP and Design Pattern Lab", "credits": 1.5, "type": "Lab"},
-            {"code": "CH214", "name": "Chemistry II Lab", "credits": 2.0, "type": "Lab"}
-        ],
-        "Semester 5": [
-            {"code": "MA311R1", "name": "Numerical Techniques", "credits": 3.0, "type": "Theory"},
-            {"code": "MA301R1", "name": "Probability and Statistics", "credits": 3.0, "type": "Theory"},
-            {"code": "CS241", "name": "Design and Analysis of Algorithms", "credits": 3.0, "type": "Theory"},
-            {"code": "CS242", "name": "Design and Analysis of Algorithms Lab", "credits": 1.0, "type": "Lab"},
-            {"code": "MA312R1", "name": "Numerical Techniques Lab", "credits": 1.0, "type": "Lab"}
-        ],
-        "Semester 9": [
-            {"code": "MA414R1", "name": "Advanced Operation Research", "credits": 3.0, "type": "Theory"},
-            {"code": "CA511", "name": "Basics of Machine Learning", "credits": 3.0, "type": "Theory"},
-            {"code": "CA601", "name": "Computer Graphics", "credits": 3.0, "type": "Theory"},
-            {"code": "CA512", "name": "Basics of Machine Learning Lab", "credits": 1.5, "type": "Lab"},
-            {"code": "CA602", "name": "Computer Graphics Lab", "credits": 1.5, "type": "Lab"}
+            {"code": "CH213", "name": "Chemistry II", "credits": 4.0, "type": "Theory"}
         ]
     }
 
 
 def generate_semester_timeline(courses, mid_sem_day=45, end_sem_day=100):
-    """Dynamically converts subject list into calendar evaluation events based on course weights."""
     assessments = []
-    
-    # 1. Quizzes & Mid-Sems
     for idx, course in enumerate(courses):
         w = course['credits']
-        # Quiz 1 before Mid-Sems
         assessments.append({
-            "name": f"Quiz 1: {course['code']} ({course['name']})",
+            "name": f"Quiz 1: {course['code']}",
             "day": 20 + (idx % 4) * 2,
             "weight": w * 0.5,
             "type": "Quiz"
         })
-        # Quiz 2 before End-Sems
         assessments.append({
             "name": f"Quiz 2 / Lab Viva: {course['code']}",
             "day": 75 + (idx % 4) * 2,
@@ -157,105 +170,82 @@ def generate_semester_timeline(courses, mid_sem_day=45, end_sem_day=100):
             "type": "Assignment" if course['type'] == 'Lab' else "Quiz"
         })
 
-    # 2. Centralized Mid-Sem & End-Sem Windows
     total_credits = sum(c['credits'] for c in courses)
-    assessments.append({
-        "name": "Mid-Semester Examinations",
-        "day": mid_sem_day,
-        "weight": total_credits * 0.35,
-        "type": "Exam"
-    })
-    assessments.append({
-        "name": "End-Semester Examinations & Vivas",
-        "day": end_sem_day,
-        "weight": total_credits * 0.50,
-        "type": "Exam"
-    })
-    
+    assessments.append({"name": "Mid-Semester Examinations", "day": mid_sem_day, "weight": total_credits * 0.35, "type": "Exam"})
+    assessments.append({"name": "End-Semester Examinations", "day": end_sem_day, "weight": total_credits * 0.50, "type": "Exam"})
     return assessments
 
 
-# --- Application Layout ---
+# --- Main Dashboard ---
 def main():
-    st.markdown("<h1 class='main-header'>🏛️ BIT Mesra Operational Fatigue Analytics</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='sub-header'>Integrated M.Sc. in Mathematics and Computing Academic Term Stress Modeling</p>", unsafe_allow_html=True)
-    st.divider()
+    st.markdown("<h1 class='main-header'>⚡ Continuous Academic Workload Analytics</h1>", unsafe_allow_html=True)
+    st.markdown("<p class='sub-header'>Time-Series Operational Stress & Fatigue Dynamics Simulation</p>", unsafe_allow_html=True)
 
-    curriculum = get_bit_mesra_curriculum()
+    curriculum = get_curriculum()
 
-    # --- Sidebar Controls ---
-    st.sidebar.header("📚 Semester & Curriculum Preset")
-    selected_sem = st.sidebar.selectbox("Select Academic Term", list(curriculum.keys()))
+    # --- Sidebar Parameters ---
+    st.sidebar.header("⚙️ Configuration Controls")
+    selected_sem = st.sidebar.selectbox("Academic Term", list(curriculum.keys()))
     courses = curriculum[selected_sem]
 
-    st.sidebar.header("📅 Timeline Configuration")
-    mid_sem_day = st.sidebar.number_input("Mid-Sem Exam Day", min_value=30, max_value=60, value=45)
-    end_sem_day = st.sidebar.number_input("End-Sem Exam Day", min_value=85, max_value=110, value=100)
+    mid_sem_day = st.sidebar.number_input("Mid-Sem Target Day", min_value=30, max_value=60, value=45)
+    end_sem_day = st.sidebar.number_input("End-Sem Target Day", min_value=85, max_value=110, value=100)
 
-    st.sidebar.header("⚙️ Stress ODE Parameters")
-    alpha = st.sidebar.slider("Stress Sensitivity (α)", 0.05, 0.50, 0.22, 0.01, help="Rate at which course workload converts into student fatigue.")
-    beta = st.sidebar.slider("Recovery Rate (β)", 0.01, 0.20, 0.08, 0.01, help="Recovery dissipation during weekends & Bitotsav / Festival breaks.")
+    st.sidebar.markdown("---")
+    st.sidebar.header("🔬 Model Sensitivity")
+    alpha = st.sidebar.slider("Stress Sensitivity (α)", 0.05, 0.50, 0.22, 0.01)
+    beta = st.sidebar.slider("Recovery Dissipation (β)", 0.01, 0.20, 0.08, 0.01)
     burnout_limit = st.sidebar.slider("Burnout Alert Threshold", 5.0, 20.0, 12.0, 0.5)
 
-    # --- Construct Holiday Mask (Weekends + Bitotsav/Puja Break) ---
+    # Recovery mask (Weekends + Mid-term break)
     holiday_mask = np.zeros(110)
     for t in range(110):
         if t % 7 in [5, 6]: 
-            holiday_mask[t] = 0.5  # Weekend rest
-        if t in range(50, 56):      # Mid-Sem Break / Fest Window
+            holiday_mask[t] = 0.5
+        if t in range(50, 56):
             holiday_mask[t] = 1.0
 
-    # Build evaluation schedule and run ODE simulation
     assessments = generate_semester_timeline(courses, mid_sem_day, end_sem_day)
-    engine = BITMesraSimulationEngine(alpha=alpha, beta=beta)
+    engine = StressSimulationEngine(alpha=alpha, beta=beta)
     df_sim = engine.solve(assessments, holiday_mask)
 
-    # --- Metrics KPI Row ---
     max_stress = df_sim['stress_index'].max()
     max_fatigue = df_sim['fatigue_level'].max()
-    overload_hours = (df_sim['fatigue_level'] > burnout_limit).sum() * (24 / 5)
 
+    # --- KPI Metric Cards ---
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Selected Term", selected_sem)
     c2.metric("Peak Stress Index", f"{max_stress:.2f}")
-    c3.metric("Peak Student Fatigue", f"{max_fatigue:.2f}", delta=f"{max_fatigue - burnout_limit:.2f}", delta_color="inverse")
-    c4.metric("Status", "🚨 High Burnout Risk" if max_fatigue > burnout_limit else "✅ Operational Velocity Normal")
+    c3.metric("Peak Cumulative Fatigue", f"{max_fatigue:.2f}", delta=f"{max_fatigue - burnout_limit:.2f}", delta_color="inverse")
+    c4.metric("Operational Status", "🚨 Critical Load" if max_fatigue > burnout_limit else "✅ Optimal Velocity")
 
-    st.markdown("###")
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    # --- Dashboard Navigation Tabs ---
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "📈 Operational Velocity Plot", 
-        "🔥 Weekly Fatigue Heatmap", 
-        "📖 Enrolled Subjects", 
-        "🗓️ Generated Assessment Schedule"
-    ])
+    # --- Visualisation Tabs ---
+    tab1, tab2, tab3 = st.tabs(["📈 Operational Velocity Plot", "🔥 Weekly Heatmap", "📚 Enrolled Courses"])
 
     with tab1:
         fig = go.Figure()
-        
-        # Stress Line
         fig.add_trace(go.Scatter(
             x=df_sim['time_day'], y=df_sim['stress_index'],
-            name='Stress Index S(t)', line=dict(color='#E65100', width=2)
+            name='Stress S(t)', line=dict(color='#38BDF8', width=2)
         ))
-        
-        # Fatigue Line
         fig.add_trace(go.Scatter(
             x=df_sim['time_day'], y=df_sim['fatigue_level'],
-            name='Student Fatigue F(t)', line=dict(color='#800000', width=3)
+            name='Fatigue F(t)', line=dict(color='#F43F5E', width=3)
         ))
-        
-        # Burnout Limit Line
         fig.add_hline(
-            y=burnout_limit, line_dash="dash", line_color="black",
-            annotation_text="Systemic Overload Limit"
+            y=burnout_limit, line_dash="dash", line_color="#F59E0B",
+            annotation_text="Burnout Limit", annotation_position="top right"
         )
-
         fig.update_layout(
-            title=f"Continuous Trajectory ({selected_sem} - Integrated M.Sc. Math & Computing)",
-            xaxis_title="Academic Days", yaxis_title="Magnitude Index",
-            hovermode="x unified", height=500
+            template="plotly_dark",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            xaxis_title="Academic Days",
+            yaxis_title="Magnitude Index",
+            hovermode="x unified",
+            height=480
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -269,22 +259,20 @@ def main():
         
         fig_heat = px.imshow(
             heatmap_piv,
-            labels=dict(x="Academic Week", y="Day", color="Fatigue Level"),
+            labels=dict(x="Academic Week", y="Day", color="Fatigue"),
             y=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            color_continuous_scale="Reds", aspect="auto"
+            color_continuous_scale="Purples", aspect="auto"
         )
-        fig_heat.update_layout(title=f"BIT Mesra Weekly Fatigue Density ({selected_sem})", height=450)
+        fig_heat.update_layout(
+            template="plotly_dark",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            height=420
+        )
         st.plotly_chart(fig_heat, use_container_width=True)
 
     with tab3:
-        st.subheader(f"Registered Courses - {selected_sem}")
-        df_courses = pd.DataFrame(courses)
-        st.dataframe(df_courses, use_container_width=True)
-
-    with tab4:
-        st.subheader("Simulated Evaluation Schedule")
-        df_assess = pd.DataFrame(assessments)
-        st.dataframe(df_assess, use_container_width=True)
+        st.dataframe(pd.DataFrame(courses), use_container_width=True)
 
 
 if __name__ == "__main__":
