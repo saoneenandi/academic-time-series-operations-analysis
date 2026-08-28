@@ -185,11 +185,9 @@ $$
 
 and therefore:
 
-$$
-\frac{dF}{dt}
-=
-\alpha S(t)-\beta F(t).
-$$
+**dF/dt = αS(t) − βF(t)**
+
+where **dF/dt** represents the rate of change of the modeled fatigue state, **αS(t)** represents workload-driven accumulation, and **βF(t)** represents fatigue dissipation.
 
 This provides a simple mechanism for incorporating calendar-dependent recovery into the dynamical system.
 
@@ -207,26 +205,21 @@ using an adaptive **Runge–Kutta 4th/5th-order (RK45)** numerical integration s
 
 The general Runge–Kutta update is:
 
-$$
-F_{n+1}
-=
-F_n
-+
-h\sum_{i=1}^{s}b_i k_i
-$$
+<div align="center">
+
+**Fₙ₊₁ = Fₙ + h Σᵢ₌₁ˢ bᵢ kᵢ**
+
+</div>
 
 where the stage evaluations are:
 
-$$
-k_i
-=
-f\left(
-t_n+c_i h,\,
-F_n+h\sum_{j=1}^{i-1}a_{ij}k_j
-\right).
-$$
+<div align="center">
 
-The implementation uses SciPy's adaptive RK45 solver to numerically integrate the fatigue ODE.
+**kᵢ = f(tₙ + cᵢh, Fₙ + h Σⱼ₌₁ⁱ⁻¹ aᵢⱼkⱼ)**
+
+</div>
+
+The implementation uses SciPy's adaptive **RK45** solver to numerically integrate the fatigue ODE.
 
 ---
 
