@@ -766,18 +766,21 @@ This could transform the current scalar model into a higher-dimensional dynamica
 
 ## 9. Semester-to-Semester Dynamics
 
-A future model could allow the terminal state of one semester to influence the initial condition of the next.
+A future extension of the model could allow the terminal state of one semester to influence the initial condition of the following semester.
 
-For example:
+The semester-to-semester relationship can be represented mathematically as:
 
 $$
-F_{k+1}(0)
-=
-\gamma F_k(T)
+F_{k+1}(0) = \gamma F_k(T)
 $$
 
-where \(\gamma\) represents a carryover factor.
+where:
 
+- \(F_k(T)\) is the modeled fatigue state at the end of semester \(k\),
+- \(F_{k+1}(0)\) is the initial modeled fatigue state of semester \(k+1\),
+- \(\gamma\) is a carryover factor satisfying \(0 \leq \gamma \leq 1\).
+
+A value of \(\gamma = 0\) represents complete recovery between semesters, while larger values represent increasing persistence of the modeled state across academic terms.
 ---
 
 # 🧠 Why This Project Is Research-Relevant
