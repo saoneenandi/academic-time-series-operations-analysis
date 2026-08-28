@@ -768,7 +768,7 @@ This could transform the current scalar model into a higher-dimensional dynamica
 
 A future extension of the model could allow the terminal state of one semester to influence the initial condition of the following semester.
 
-The semester-to-semester relationship can be represented mathematically as:
+The semester-to-semester relationship can be represented as:
 
 $$
 F_{k+1}(0) = \gamma F_k(T)
@@ -776,11 +776,12 @@ $$
 
 where:
 
-- \(F_k(T)\) is the modeled fatigue state at the end of semester \(k\),
-- \(F_{k+1}(0)\) is the initial modeled fatigue state of semester \(k+1\),
-- \(\gamma\) is a carryover factor satisfying \(0 \leq \gamma \leq 1\).
+- **F_k(T)** represents the modeled fatigue state at the end of semester **k**.
+- **F_(k+1)(0)** represents the initial modeled fatigue state of semester **k+1**.
+- **γ** represents the carryover factor, where **0 ≤ γ ≤ 1**.
 
-A value of \(\gamma = 0\) represents complete recovery between semesters, while larger values represent increasing persistence of the modeled state across academic terms.
+A value of **γ = 0** represents complete recovery between semesters, while larger values represent increasing persistence of the modeled state across academic terms.
+
 ---
 
 # 🧠 Why This Project Is Research-Relevant
