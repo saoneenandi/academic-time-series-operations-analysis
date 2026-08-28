@@ -653,16 +653,11 @@ could then be investigated using Monte Carlo simulation or Bayesian methods.
 
 A stochastic extension could take the form:
 
-$$
-dF =
-\left[
-\alpha S(t)
--
-\beta F(t)(1-H(t))
-\right]dt
-+
-\sigma_F dW_t
-$$
+<div align="center">
+
+**dF = [αS(t) − βF(t)(1 − H(t))]dt + σ_F dW_t**
+
+</div>
 
 where:
 
