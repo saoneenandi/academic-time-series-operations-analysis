@@ -5,82 +5,79 @@ import plotly.graph_objects as go
 import plotly.express as px
 from scipy.integrate import solve_ivp
 
-# --- Page & Layout Configuration ---
+# --- Page Layout & Configuration ---
 st.set_page_config(
-    page_title="Academic Workload & Stress Engine",
+    page_title="Academic Workload & Stress Analytics",
     page_icon="⚡",
     layout="wide"
 )
 
-# --- Aesthetic Custom CSS Styling ---
+# --- Clean Light/White CSS Styling ---
 st.markdown("""
 <style>
-    /* Main Background & Font Styling */
+    /* Global Page Styling */
     .stApp {
-        background-color: #0F172A;
-        color: #F8FAFC;
+        background-color: #F8FAFC;
+        color: #0F172A;
     }
     
-    /* Title and Subtitle */
+    /* Headers */
     .main-header {
         font-family: 'Inter', sans-serif;
-        background: linear-gradient(90deg, #38BDF8 0%, #818CF8 50%, #C084FC 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: #1E293B;
         font-weight: 800;
-        font-size: 2.5rem;
+        font-size: 2.2rem;
         margin-bottom: 0.2rem;
     }
     .sub-header {
-        color: #94A3B8;
+        color: #64748B;
         font-size: 1.05rem;
-        margin-bottom: 1.8rem;
+        margin-bottom: 1.5rem;
     }
 
-    /* Metric Cards Styling */
+    /* Metric Cards - Clean White Glassmorphism */
     div[data-testid="stMetric"] {
-        background: rgba(30, 41, 59, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background-color: #FFFFFF;
+        border: 1px solid #E2E8F0;
         border-radius: 12px;
         padding: 16px 20px;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
     }
     div[data-testid="stMetricValue"] {
         font-size: 1.8rem;
         font-weight: 700;
-        color: #F8FAFC;
+        color: #0F172A;
     }
     div[data-testid="stMetricLabel"] {
-        color: #38BDF8;
+        color: #2563EB;
         font-weight: 600;
         font-size: 0.9rem;
     }
 
-    /* Tabs Styling */
+    /* Tab Styling */
     button[data-baseweb="tab"] {
-        color: #94A3B8 !important;
+        color: #64748B !important;
         font-weight: 600 !important;
         border-radius: 8px !important;
         padding: 8px 16px !important;
     }
     button[aria-selected="true"] {
-        color: #38BDF8 !important;
-        background-color: rgba(56, 189, 248, 0.1) !important;
+        color: #2563EB !important;
+        background-color: #EFF6FF !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
 
-# --- Numerical Differential Engine ---
+# --- Simulation Engine ---
 class StressSimulationEngine:
     def __init__(self, semester_days=110, alpha=0.22, beta=0.08):
         self.T = semester_days
-        self.alpha = alpha  # Sensitivity rate
-        self.beta = beta    # Recovery rate
+        self.alpha = alpha  # Stress impact coefficient
+        self.beta = beta    # Recovery rate coefficient
 
     def stress_heuristic(self, t, assessments):
-        S_0 = 0.5  # Baseline
+        S_0 = 0.5  # Baseline academic stress
         stress = S_0
         
         for item in assessments:
@@ -118,7 +115,7 @@ class StressSimulationEngine:
         return pd.DataFrame({'time_day': sol.t, 'stress_index': stress_vals, 'fatigue_level': sol.y[0]})
 
 
-# --- Curriculum Dataset ---
+# --- Academic Curriculum Database ---
 def get_curriculum():
     return {
         "Semester 1": [
@@ -176,14 +173,14 @@ def generate_semester_timeline(courses, mid_sem_day=45, end_sem_day=100):
     return assessments
 
 
-# --- Main Dashboard ---
+# --- Main Dashboard Application ---
 def main():
     st.markdown("<h1 class='main-header'>⚡ Continuous Academic Workload Analytics</h1>", unsafe_allow_html=True)
     st.markdown("<p class='sub-header'>Time-Series Operational Stress & Fatigue Dynamics Simulation</p>", unsafe_allow_html=True)
 
     curriculum = get_curriculum()
 
-    # --- Sidebar Parameters ---
+    # --- Sidebar Controls ---
     st.sidebar.header("⚙️ Configuration Controls")
     selected_sem = st.sidebar.selectbox("Academic Term", list(curriculum.keys()))
     courses = curriculum[selected_sem]
@@ -197,7 +194,7 @@ def main():
     beta = st.sidebar.slider("Recovery Dissipation (β)", 0.01, 0.20, 0.08, 0.01)
     burnout_limit = st.sidebar.slider("Burnout Alert Threshold", 5.0, 20.0, 12.0, 0.5)
 
-    # Recovery mask (Weekends + Mid-term break)
+    # Rest capacity mask (Weekends + Mid-term break)
     holiday_mask = np.zeros(110)
     for t in range(110):
         if t % 7 in [5, 6]: 
@@ -212,7 +209,7 @@ def main():
     max_stress = df_sim['stress_index'].max()
     max_fatigue = df_sim['fatigue_level'].max()
 
-    # --- KPI Metric Cards ---
+    # --- KPI Metric Row ---
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Selected Term", selected_sem)
     c2.metric("Peak Stress Index", f"{max_stress:.2f}")
@@ -221,25 +218,25 @@ def main():
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # --- Visualisation Tabs ---
+    # --- Visualization Tabs ---
     tab1, tab2, tab3 = st.tabs(["📈 Operational Velocity Plot", "🔥 Weekly Heatmap", "📚 Enrolled Courses"])
 
     with tab1:
         fig = go.Figure()
         fig.add_trace(go.Scatter(
             x=df_sim['time_day'], y=df_sim['stress_index'],
-            name='Stress S(t)', line=dict(color='#38BDF8', width=2)
+            name='Stress Index S(t)', line=dict(color='#2563EB', width=2)
         ))
         fig.add_trace(go.Scatter(
             x=df_sim['time_day'], y=df_sim['fatigue_level'],
-            name='Fatigue F(t)', line=dict(color='#F43F5E', width=3)
+            name='Student Fatigue F(t)', line=dict(color='#DC2626', width=3)
         ))
         fig.add_hline(
-            y=burnout_limit, line_dash="dash", line_color="#F59E0B",
-            annotation_text="Burnout Limit", annotation_position="top right"
+            y=burnout_limit, line_dash="dash", line_color="#D97706",
+            annotation_text="Burnout Threshold", annotation_position="top right"
         )
         fig.update_layout(
-            template="plotly_dark",
+            template="plotly_white",
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
             xaxis_title="Academic Days",
@@ -261,10 +258,10 @@ def main():
             heatmap_piv,
             labels=dict(x="Academic Week", y="Day", color="Fatigue"),
             y=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            color_continuous_scale="Purples", aspect="auto"
+            color_continuous_scale="Reds", aspect="auto"
         )
         fig_heat.update_layout(
-            template="plotly_dark",
+            template="plotly_white",
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
             height=420
