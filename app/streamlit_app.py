@@ -71,7 +71,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# --- Simulation Engine ---
+# --- Differential Simulation Engine ---
 class StressSimulationEngine:
     def __init__(self, semester_days=110, alpha=0.22, beta=0.08):
         self.T = semester_days
@@ -140,13 +140,13 @@ class StressSimulationEngine:
         
         df = pd.DataFrame({'time_day': sol.t, 'stress_index': stress_vals, 'fatigue_level': sol.y[0]})
         
-        # Subject-wise breakdown calculation
+        # Calculate course-wise stress contribution
         breakdowns = [self.subject_stress_breakdown(t, assessments, courses) for t in sol.t]
         df_bd = pd.DataFrame(breakdowns)
         return pd.concat([df, df_bd], axis=1)
 
 
-# --- Academic Curriculum Presets ---
+# --- Complete Integrated M.Sc Curriculum Dataset (Semesters 1 - 10) ---
 def get_curriculum():
     return {
         "Semester 1": [
@@ -154,20 +154,67 @@ def get_curriculum():
             {"code": "MA102", "name": "Real Analysis", "credits": 4.0, "type": "Theory"},
             {"code": "MA109", "name": "Matrix Theory", "credits": 4.0, "type": "Theory"},
             {"code": "CH111", "name": "Chemistry I", "credits": 4.0, "type": "Theory"},
-            {"code": "CH112", "name": "Chemistry I Lab", "credits": 2.0, "type": "Lab"}
+            {"code": "CH112", "name": "Chemistry I Lab", "credits": 2.0, "type": "Lab"},
+            {"code": "MT132", "name": "Communication Skill I", "credits": 1.5, "type": "Sessional"}
+        ],
+        "Semester 2": [
+            {"code": "MA105R1", "name": "Calculus-II", "credits": 3.0, "type": "Theory"},
+            {"code": "MA106R1", "name": "Ordinary Differential Equations", "credits": 3.0, "type": "Theory"},
+            {"code": "MA110R1", "name": "Complex Analysis", "credits": 3.0, "type": "Theory"},
+            {"code": "PH109", "name": "Physics I", "credits": 4.0, "type": "Theory"},
+            {"code": "CS101", "name": "Programming for Problem Solving", "credits": 4.0, "type": "Theory"},
+            {"code": "PH110R1", "name": "Physics I Lab", "credits": 2.0, "type": "Lab"}
         ],
         "Semester 3": [
             {"code": "MA202R1", "name": "Abstract Algebra", "credits": 3.0, "type": "Theory"},
-            {"code": "MA201R1", "name": "PDE", "credits": 3.0, "type": "Theory"},
+            {"code": "MA201R1", "name": "Partial Differential Equations", "credits": 3.0, "type": "Theory"},
             {"code": "PH111", "name": "Physics II", "credits": 4.0, "type": "Theory"},
             {"code": "CS231", "name": "Data Structures", "credits": 4.0, "type": "Theory"},
-            {"code": "PE309", "name": "Project Management", "credits": 3.0, "type": "Theory"}
+            {"code": "PE309", "name": "Project Management", "credits": 3.0, "type": "Theory"},
+            {"code": "PH112", "name": "Physics II Lab", "credits": 2.0, "type": "Lab"}
+        ],
+        "Semester 4": [
+            {"code": "MA206R1", "name": "Linear Algebra", "credits": 3.0, "type": "Theory"},
+            {"code": "MA210", "name": "Discrete Mathematics & Graph Theory", "credits": 4.0, "type": "Theory"},
+            {"code": "CS233", "name": "Object Oriented Programming & Design", "credits": 3.0, "type": "Theory"},
+            {"code": "CH213", "name": "Chemistry II", "credits": 4.0, "type": "Theory"},
+            {"code": "CS234", "name": "OOP Lab", "credits": 1.5, "type": "Lab"}
         ],
         "Semester 5": [
             {"code": "MA311R1", "name": "Numerical Techniques", "credits": 3.0, "type": "Theory"},
             {"code": "MA301R1", "name": "Probability & Statistics", "credits": 3.0, "type": "Theory"},
-            {"code": "CS241", "name": "Algorithms", "credits": 3.0, "type": "Theory"},
-            {"code": "CS242", "name": "DAA Lab", "credits": 1.0, "type": "Lab"}
+            {"code": "CS241", "name": "Design & Analysis of Algorithms", "credits": 3.0, "type": "Theory"},
+            {"code": "CS242", "name": "DAA Lab", "credits": 1.0, "type": "Lab"},
+            {"code": "MA312R1", "name": "Numerical Techniques Lab", "credits": 1.0, "type": "Lab"}
+        ],
+        "Semester 6": [
+            {"code": "MA305", "name": "Optimization Techniques", "credits": 4.0, "type": "Theory"},
+            {"code": "MA307", "name": "Functional Analysis", "credits": 4.0, "type": "Theory"},
+            {"code": "CS301", "name": "Database Management Systems", "credits": 3.0, "type": "Theory"},
+            {"code": "CS302", "name": "DBMS Lab", "credits": 1.5, "type": "Lab"}
+        ],
+        "Semester 7": [
+            {"code": "MA401R1", "name": "Measure Theory & Integration", "credits": 3.0, "type": "Theory"},
+            {"code": "MA402R1", "name": "Advanced Complex Analysis", "credits": 3.0, "type": "Theory"},
+            {"code": "CS310", "name": "Formal Languages & Automata", "credits": 3.0, "type": "Theory"},
+            {"code": "CA505", "name": "Software Engineering", "credits": 4.0, "type": "Theory"}
+        ],
+        "Semester 8": [
+            {"code": "MA408", "name": "Topology", "credits": 4.0, "type": "Theory"},
+            {"code": "MA410", "name": "Stochastic Processes", "credits": 4.0, "type": "Theory"},
+            {"code": "CS401", "name": "Operating Systems", "credits": 3.0, "type": "Theory"},
+            {"code": "CS402", "name": "Operating Systems Lab", "credits": 1.5, "type": "Lab"}
+        ],
+        "Semester 9": [
+            {"code": "MA414R1", "name": "Advanced Operations Research", "credits": 3.0, "type": "Theory"},
+            {"code": "CA511", "name": "Basics of Machine Learning", "credits": 3.0, "type": "Theory"},
+            {"code": "CA601", "name": "Computer Graphics", "credits": 3.0, "type": "Theory"},
+            {"code": "CA512", "name": "Machine Learning Lab", "credits": 1.5, "type": "Lab"},
+            {"code": "CA602", "name": "Computer Graphics Lab", "credits": 1.5, "type": "Lab"}
+        ],
+        "Semester 10": [
+            {"code": "MA500", "name": "Master's Thesis / Project", "credits": 16.0, "type": "Sessional"},
+            {"code": "MA502", "name": "Comprehensive Seminar & Viva", "credits": 4.0, "type": "Sessional"}
         ]
     }
 
@@ -228,7 +275,7 @@ def main():
     beta = st.sidebar.slider("Recovery Rate (β)", 0.01, 0.20, 0.08, 0.01)
     burnout_limit = st.sidebar.slider("Burnout Alert Threshold", 5.0, 20.0, 12.0, 0.5)
 
-    # Rest capacity mask
+    # Rest capacity mask (Weekends + Mid-term break)
     holiday_mask = np.zeros(110)
     for t in range(110):
         if t % 7 in [5, 6]: 
@@ -236,7 +283,7 @@ def main():
         if t in range(50, 56):
             holiday_mask[t] = 1.0
 
-    # Interactive Course & Credit Editor Expander
+    # Dynamic Course & Credit Editor
     with st.expander("📝 Edit Courses & Credits Dynamically", expanded=False):
         st.write("Modify course credits or types below to observe real-time impact on workload curves.")
         df_edit = pd.DataFrame(st.session_state.custom_courses)
@@ -269,7 +316,7 @@ def main():
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # --- Automated AI Mitigation Advisory ---
+    # --- Automated Mitigation Advisory ---
     if max_fatigue_a > burnout_limit:
         over_days = df_sim_a[df_sim_a['fatigue_level'] > burnout_limit]['time_day']
         start_day, end_day = int(over_days.min()), int(over_days.max())
