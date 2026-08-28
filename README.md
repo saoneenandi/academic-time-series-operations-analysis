@@ -101,7 +101,7 @@ $$
 
 represent continuous academic time measured in days over an academic term.
 
-The instantaneous workload stress is modeled as
+The instantaneous workload stress is modeled as:
 
 $$
 S(t)
@@ -126,12 +126,12 @@ $$
 
 | Parameter | Meaning | Default / Range |
 |---|---|---|
-| \(S_0\) | Baseline daily academic workload | 0.5 |
-| \(w_i,w_j\) | Course / assessment weights | Curriculum-dependent |
-| \(t_i\) | Examination date | Schedule-dependent |
-| \(t_j\) | Quiz or deadline date | Schedule-dependent |
-| \(\sigma\) | Examination preparation/review width | 2.5 |
-| \(\lambda\) | Deadline-pressure accumulation parameter | 3.0 |
+| **S₀** | Baseline daily academic workload | 0.5 |
+| **wᵢ, wⱼ** | Course / assessment weights | Curriculum-dependent |
+| **tᵢ** | Examination date | Schedule-dependent |
+| **tⱼ** | Quiz or deadline date | Schedule-dependent |
+| **σ** | Examination preparation/review width | 2.5 |
+| **λ** | Deadline-pressure accumulation parameter | 3.0 |
 
 The Gaussian kernel represents distributed preparation and review pressure around major examinations.
 
